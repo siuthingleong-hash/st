@@ -1,0 +1,817 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Estée's Birthday Surprise</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Mulish:wght@400;600;700;800&family=Noto+Serif+SC:wght@500;700&family=Playfair+Display:wght@500;600&display=swap">
+<style>
+  /* Layout: one screen, one moment at a time — envelope, a game, the reward, the letter — centred in a phone-width column.
+     A deliberate single dusk-and-gold world (no light theme): it is a celebration scene, not a document.
+     Four games share it: Make a Wish (cake), Balloon Pop, Scratch Card, Catch the Blessings. */
+  :root {
+    color-scheme: dark;
+    --night: #101a33;
+    --dusk: #23305a;
+    --gold: #e6c27a;
+    --gold-deep: #b98a3e;
+    --blush: #f2b8b5;
+    --cream: #fbf3e4;
+    --ink: #2b2230;
+    --text: #f6efe3;
+    --muted: #b9b3c9;
+    --display: "Playfair Display", "Noto Serif SC", Georgia, serif;
+    --script: "Great Vibes", "Segoe Script", cursive;
+    --zh: "Noto Serif SC", "Songti SC", SimSun, serif;
+    --body: "Mulish", "Segoe UI", system-ui, sans-serif;
+  }
+  html, body { height: 100%; }
+  body {
+    background: radial-gradient(120% 80% at 50% 0%, var(--dusk) 0%, var(--night) 60%) fixed, var(--night);
+    color: var(--text); font-family: var(--body); font-size: 16px; line-height: 1.55;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    overflow-x: hidden;
+  }
+  :lang(zh) .t-display, :lang(zh) h1, :lang(zh) h2 { font-family: var(--zh); }
+  .stars { position: fixed; inset: 0; pointer-events: none; }
+  main { position: relative; max-width: 440px; margin: 0 auto; min-height: 100%; display: grid; align-content: center; gap: 20px; padding-block: 56px 32px; text-align: center; }
+  .step { display: grid; gap: 16px; }
+  .topbar { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); left: max(12px, env(safe-area-inset-left, 0px)); display: flex; justify-content: space-between; gap: 8px; z-index: 5; }
+  .langs { display: flex; gap: 4px; }
+  .pill { font: 600 13px/1 var(--body); color: var(--muted); background: rgba(255,255,255,.06); border: 1px solid rgba(230,194,122,.25); border-radius: 99px; padding: 8px 12px; cursor: pointer; }
+  .pill[aria-pressed="true"] { color: var(--night); background: var(--gold); border-color: var(--gold); }
+  .pill:focus-visible, .btn:focus-visible, .candle:focus-visible, .gift:focus-visible, .envelope:focus-visible, .balloon:focus-visible { outline: 3px solid var(--blush); outline-offset: 3px; }
+  .eyebrow { font: 700 12px/1 var(--body); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+  h1 { font: 500 clamp(30px, 8vw, 40px)/1.15 var(--display); margin: 0; text-wrap: balance; }
+  h2 { font: 500 clamp(24px, 6.5vw, 30px)/1.2 var(--display); margin: 0; text-wrap: balance; }
+  .script { font-family: var(--script); color: var(--gold); font-size: clamp(40px, 12vw, 56px); line-height: 1.05; overflow-wrap: anywhere; }
+  .hint { color: var(--muted); margin: 0; }
+  .btn { justify-self: center; font: 700 15px/1 var(--body); color: var(--night); background: linear-gradient(180deg, #f1d595, var(--gold)); border: 0; border-radius: 99px; padding: 15px 26px; cursor: pointer; box-shadow: 0 8px 24px rgba(230,194,122,.25); text-decoration: none; display: inline-block; }
+  .btn.ghost { color: var(--gold); background: transparent; border: 1px solid rgba(230,194,122,.5); box-shadow: none; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  /* taps should play, not select text or zoom */
+  button, .btn, .envelope, .candle, .gift, .balloon { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  .envelope *, .candle *, .gift *, .balloon * { pointer-events: none; }
+
+  /* ---------- envelope ---------- */
+  .envelope { position: relative; width: min(320px, 86vw); aspect-ratio: 3 / 2; max-width: 100%; margin: 8px auto 0; border: 0; padding: 0; cursor: pointer; background: none; }
+  .env-back { position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(160deg, var(--cream), #efdcc0); box-shadow: 0 18px 40px rgba(0,0,0,.35); }
+  .env-flap { position: absolute; inset: 0 0 35% 0; background: linear-gradient(180deg, #f3e3c8, #e7cfa8); clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: transform .7s ease; border-radius: 10px 10px 0 0; }
+  .env-to { position: absolute; left: 0; right: 0; bottom: 16%; color: var(--ink); font-family: var(--script); font-size: clamp(28px, 8vw, 36px); padding-inline: 12px; overflow-wrap: anywhere; }
+  :lang(zh) .env-to { font-family: var(--zh); font-size: clamp(20px, 6vw, 26px); }
+  .seal { position: absolute; left: 50%; top: 52%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #c0485a, #8e2236); color: #f7d8c4; font: 600 22px/52px var(--display); box-shadow: 0 3px 8px rgba(0,0,0,.3); transition: opacity .3s; }
+  .envelope.open .env-flap { transform: rotateX(180deg); }
+  .envelope.open .seal { opacity: 0; }
+  .game-badge { justify-self: center; font: 700 12px/1 var(--body); color: var(--gold); border: 1px solid rgba(230,194,122,.35); border-radius: 99px; padding: 7px 12px; }
+
+  /* ---------- game 1: Make a Wish (cake + gifts) ---------- */
+  .cake { position: relative; width: 270px; height: 250px; margin: 6px auto 0; max-width: 100%; }
+  .plate { position: absolute; left: -10px; right: -10px; bottom: 0; height: 26px; border-radius: 50%; background: radial-gradient(ellipse at 50% 30%, #fffaf0, #d9cdb8); box-shadow: 0 10px 20px rgba(0,0,0,.35); }
+  .tier { position: absolute; left: 50%; transform: translateX(-50%); border-radius: 14px 14px 10px 10px; }
+  .tier.low { bottom: 14px; width: 250px; height: 92px; background: linear-gradient(180deg, #f7c9c4, #eaa7a3); }
+  .tier.high { bottom: 100px; width: 190px; height: 70px; background: linear-gradient(180deg, #fbefe0, #efd9bd); }
+  .tier::before { content: ""; position: absolute; left: 0; right: 0; top: -2px; height: 22px; border-radius: 12px 12px 0 0;
+    background: radial-gradient(circle at 10px 18px, var(--cream) 9px, transparent 10px) 0 0 / 28px 30px repeat-x, linear-gradient(var(--cream), var(--cream)) 0 0 / 100% 12px no-repeat; }
+  .tier.high::before { background: radial-gradient(circle at 10px 18px, #f2b8b5 9px, transparent 10px) 0 0 / 28px 30px repeat-x, linear-gradient(#f2b8b5, #f2b8b5) 0 0 / 100% 12px no-repeat; }
+  .tier.low::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 26px; height: 8px; background: radial-gradient(circle, var(--gold) 3px, transparent 4px) 0 0 / 22px 8px repeat-x; }
+  .candles { position: absolute; bottom: 168px; left: 50%; transform: translateX(-50%); display: flex; gap: 14px; }
+  .candle { position: relative; width: 20px; height: 62px; border: 0; padding: 0; background: none; cursor: pointer; }
+  .candle .stick { position: absolute; left: 4px; right: 4px; bottom: 0; height: 46px; border-radius: 3px; background: repeating-linear-gradient(135deg, var(--cream) 0 6px, var(--gold) 6px 10px); }
+  .candle .flame { position: absolute; left: 50%; bottom: 48px; width: 14px; height: 22px; margin-left: -7px; border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+    background: radial-gradient(ellipse at 50% 70%, #fff8dc 0 25%, #ffd36b 45%, #f39c34 80%); box-shadow: 0 0 18px 6px rgba(255,200,90,.45); transform-origin: 50% 90%; animation: flicker 1.2s ease-in-out infinite alternate; transition: transform .25s, opacity .25s; }
+  .candle .smoke { position: absolute; left: 50%; bottom: 50px; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: rgba(220,220,230,.55); opacity: 0; }
+  .candle.out .flame { transform: scale(0); opacity: 0; animation: none; }
+  .candle.out .smoke { animation: smoke 1.4s ease-out forwards; }
+  @keyframes flicker { from { transform: rotate(-3deg) scaleY(.94); } to { transform: rotate(3deg) scaleY(1.06); } }
+  @keyframes smoke { 0% { opacity: .7; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-46px) scale(2.6); } }
+  .count { font: 700 14px/1 var(--body); color: var(--gold); font-variant-numeric: tabular-nums; }
+  .gifts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 8px; }
+  .gift { position: relative; aspect-ratio: 1; max-width: 100%; border: 0; padding: 0; cursor: pointer; background: none; }
+  .gift .box { position: absolute; left: 8%; right: 8%; bottom: 0; height: 62%; border-radius: 6px; background: var(--c); box-shadow: 0 10px 20px rgba(0,0,0,.3); }
+  .gift .lid { position: absolute; left: 3%; right: 3%; bottom: 58%; height: 18%; border-radius: 6px; background: var(--c); filter: brightness(1.08); box-shadow: 0 4px 8px rgba(0,0,0,.2); transition: transform .5s cubic-bezier(.3,1.6,.5,1); }
+  .gift .box::after, .gift .lid::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 16%; margin-left: -8%; background: var(--gold); }
+  .gift .bowtie { position: absolute; left: 50%; bottom: 74%; width: 44%; height: 20%; margin-left: -22%; transition: transform .5s cubic-bezier(.3,1.6,.5,1); }
+  .gift .bowtie::before, .gift .bowtie::after { content: ""; position: absolute; bottom: 0; width: 50%; height: 100%; border: 5px solid var(--gold); border-radius: 50% 50% 10% 50%; }
+  .gift .bowtie::before { left: 0; transform: rotate(-20deg); }
+  .gift .bowtie::after { right: 0; transform: scaleX(-1) rotate(-20deg); }
+  .gift.opened .lid, .gift.opened .bowtie { transform: translateY(-34%) rotate(-14deg); }
+  .gift.opened { cursor: default; }
+  .gift:not(.opened):hover .lid { transform: translateY(-6%); }
+  .gift.shaking { animation: shake .7s ease-in-out; }
+  @keyframes shake { 0%, 100% { transform: none; } 20% { transform: rotate(-7deg); } 40% { transform: rotate(7deg); } 60% { transform: rotate(-5deg); } 80% { transform: rotate(5deg); } }
+
+  /* ---------- game 2: Balloon Pop ---------- */
+  .sky { position: relative; height: min(440px, 58vh); border-radius: 18px; overflow: hidden; background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(230,194,122,.06)); border: 1px solid rgba(230,194,122,.18); touch-action: manipulation; }
+  .balloon { position: absolute; left: 0; top: 0; width: 64px; height: 80px; border: 0; padding: 0; background: none; cursor: pointer; will-change: transform; }
+  .balloon .b-body { position: absolute; inset: 0 0 8px 0; border-radius: 50% 50% 48% 48% / 55% 55% 45% 45%; background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.85) 0 7%, var(--c) 30%, var(--c2) 100%); box-shadow: inset -6px -8px 14px rgba(0,0,0,.12); }
+  .balloon .b-knot { position: absolute; left: 50%; bottom: 3px; width: 10px; height: 8px; margin-left: -5px; background: var(--c2); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+  .balloon .b-string { position: absolute; left: 50%; top: 100%; width: 1px; height: 46px; background: rgba(246,239,227,.45); }
+  .balloon.gold { width: 104px; height: 130px; }
+  .balloon .b-name { position: absolute; inset: 22% 6% 30%; display: grid; place-items: center; font: 400 22px/1 var(--script); color: #5b3a12; text-align: center; overflow-wrap: anywhere; }
+  :lang(zh) .balloon .b-name { font: 700 15px/1.2 var(--zh); }
+  .jar { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 34px; }
+  .chip { font: 700 13px/1 var(--body); color: var(--night); background: var(--gold); border-radius: 99px; padding: 8px 11px; animation: rise .4s ease; }
+  :lang(zh) .chip { font-family: var(--zh); }
+
+  /* ---------- game 3: Scratch Card ---------- */
+  .scratch { position: relative; width: min(340px, 100%); aspect-ratio: 17 / 11; margin: 0 auto; border-radius: 18px; overflow: hidden; box-shadow: 0 18px 40px rgba(0,0,0,.4); }
+  .scratch .prize { position: absolute; inset: 0; display: grid; place-content: center; gap: 6px; padding: 16px; color: var(--ink); background: radial-gradient(120% 90% at 50% 0%, #fff8ea, #f3dfbd); }
+  .scratch .prize .icon { font-size: 42px; line-height: 1; }
+  .scratch .prize .who { font: 400 34px/1 var(--script); color: #8e2236; overflow-wrap: anywhere; }
+  :lang(zh) .scratch .prize .who { font: 700 22px/1.2 var(--zh); }
+  .scratch .prize .word { font: 600 22px/1.2 var(--display); color: var(--gold-deep); }
+  :lang(zh) .scratch .prize .word { font-family: var(--zh); letter-spacing: .12em; }
+  .scratch .prize p { margin: 0; font-size: 14.5px; }
+  .scratch canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; transition: opacity .6s; }
+  .scratch canvas.done { opacity: 0; pointer-events: none; }
+
+  /* ---------- game 4: Catch the Blessings ---------- */
+  .catch-wrap { position: relative; width: min(380px, 100%); margin: 0 auto; }
+  .catch-wrap canvas { display: block; width: 100%; height: auto; aspect-ratio: 19 / 24; border-radius: 18px; background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(230,194,122,.08)); border: 1px solid rgba(230,194,122,.18); touch-action: none; }
+  .catch-hud { display: flex; justify-content: space-between; font: 800 15px/1 var(--body); color: var(--gold); font-variant-numeric: tabular-nums; padding-inline: 4px; }
+  .catch-start { position: absolute; inset: 0; display: grid; place-content: center; gap: 12px; padding: 20px; }
+
+  /* ---------- reward + letter ---------- */
+  .blessing { background: linear-gradient(170deg, var(--cream), #f1e2c9); color: var(--ink); border-radius: 16px; padding: 22px 20px; box-shadow: 0 18px 40px rgba(0,0,0,.35); display: grid; gap: 6px; animation: rise .5s ease; }
+  .blessing .icon { font-size: 40px; line-height: 1; }
+  .blessing .word { font: 600 26px/1.2 var(--display); color: #8e2236; }
+  :lang(zh) .blessing .word { font-family: var(--zh); letter-spacing: .1em; }
+  .blessing p { margin: 0; }
+  @keyframes rise { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .letter { background: linear-gradient(170deg, var(--cream), #f3e5cc); color: var(--ink); border-radius: 18px; padding: 28px 24px 24px; box-shadow: 0 22px 50px rgba(0,0,0,.4); display: grid; gap: 12px; text-align: left; }
+  .letter .script { color: var(--gold-deep); text-align: center; font-size: clamp(40px, 11vw, 52px); }
+  .letter .msg { margin: 0; white-space: pre-line; font-size: 16.5px; }
+  .letter .sign { text-align: right; display: grid; gap: 2px; }
+  .letter .sign .name { font: 400 40px/1 var(--script); color: var(--gold-deep); }
+  .letter .sign .role { font: 700 11px/1 var(--body); letter-spacing: .22em; color: #8a7354; }
+  .reply-note { font-size: 13px; color: var(--muted); margin: 0; }
+  .sound-tip { position: fixed; z-index: 6; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    max-width: 440px; margin: 0 auto; padding: 12px 14px; border-radius: 12px; background: rgba(16,26,51,.92); border: 1px solid rgba(230,194,122,.4); color: var(--text); font-size: 14px; text-align: center; }
+
+  #fx { position: fixed; inset: 0; pointer-events: none; z-index: 4; }
+  @media (prefers-reduced-motion: reduce) { .candle .flame, .gift.shaking { animation: none; } .blessing, .chip { animation: none; } .env-flap, .gift .lid, .gift .bowtie, .scratch canvas { transition: none; } }
+</style>
+
+<canvas class="stars" id="stars" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="topbar">
+  <button class="pill" id="sound" type="button" aria-pressed="true">♪ On</button>
+  <div class="langs" role="group" aria-label="Language">
+    <button class="pill" type="button" data-lang="zh">中文</button>
+    <button class="pill" type="button" data-lang="ms">BM</button>
+    <button class="pill" type="button" data-lang="en">EN</button>
+  </div>
+</div>
+<p class="sound-tip" id="soundTip" role="status" hidden data-t="soundTip"></p>
+
+<main>
+  <section id="s-envelope" class="step">
+    <div class="eyebrow" data-t="eyebrow"></div>
+    <h1 data-t="envTitle"></h1>
+    <button class="envelope" id="envelope" type="button" aria-label="Open">
+      <span class="env-back"></span>
+      <span class="env-to" id="envTo"></span>
+      <span class="env-flap"></span>
+      <span class="seal">E</span>
+    </button>
+    <p class="hint" data-t="envHint"></p>
+    <div class="game-badge" id="gameBadge"></div>
+  </section>
+
+  <!-- game 1: Make a Wish -->
+  <section id="s-cake" class="step" hidden>
+    <div class="eyebrow" data-t="cakeEyebrow"></div>
+    <h2 data-t="cakeTitle"></h2>
+    <div class="cake" aria-label="Birthday cake">
+      <div class="candles" id="candles"></div>
+      <div class="tier high"></div>
+      <div class="tier low"></div>
+      <div class="plate"></div>
+    </div>
+    <div class="count" id="count" aria-live="polite"></div>
+  </section>
+  <section id="s-gifts" class="step" hidden>
+    <div class="script" id="hbd"></div>
+    <h2 data-t="giftTitle"></h2>
+    <p class="hint" data-t="giftHint"></p>
+    <div class="gifts" id="gifts"></div>
+  </section>
+
+  <!-- game 2: Balloon Pop -->
+  <section id="s-pop" class="step" hidden>
+    <div class="eyebrow" data-t="popEyebrow"></div>
+    <h2 id="popTitle"></h2>
+    <div class="sky" id="sky"></div>
+    <div class="count" id="popCount" aria-live="polite"></div>
+    <div class="jar" id="jar" aria-live="polite"></div>
+  </section>
+
+  <!-- game 3: Scratch Card -->
+  <section id="s-scratch" class="step" hidden>
+    <div class="eyebrow" data-t="scEyebrow"></div>
+    <h2 data-t="scTitle"></h2>
+    <div class="scratch" id="scratch">
+      <div class="prize" id="prize"></div>
+      <canvas id="foil" aria-label="Scratch area"></canvas>
+    </div>
+    <p class="hint" data-t="scHint"></p>
+  </section>
+
+  <!-- game 4: Catch the Blessings -->
+  <section id="s-catch" class="step" hidden>
+    <div class="eyebrow" data-t="caEyebrow"></div>
+    <h2 data-t="caTitle"></h2>
+    <div class="catch-hud"><span id="caScore"></span><span id="caTime"></span></div>
+    <div class="catch-wrap">
+      <canvas id="catchCanvas" width="380" height="480" aria-label="Catch the blessings game"></canvas>
+      <div class="catch-start" id="catchStart">
+        <p class="hint" data-t="caHint"></p>
+        <button class="btn" id="caGo" type="button" data-t="caStart"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- shared reward -->
+  <section id="s-reward" class="step" hidden>
+    <div class="script" id="rewardTitle"></div>
+    <div id="reward" aria-live="polite"></div>
+    <button class="btn" id="toLetter" type="button" hidden data-t="toLetter"></button>
+  </section>
+
+  <section id="s-letter" class="step" hidden>
+    <article class="letter">
+      <div class="script" data-t="hb"></div>
+      <p class="msg" id="msg"></p>
+      <div class="sign"><span class="name">Estée</span><span class="role">GENUINE ADVISOR</span></div>
+    </article>
+    <div class="row">
+      <a class="btn" id="reply" target="_blank" rel="noopener" data-t="reply"></a>
+      <button class="btn ghost" id="another" type="button"></button>
+    </div>
+    <p class="reply-note" id="replyNote"></p>
+  </section>
+</main>
+
+<script>
+(function () {
+  const ESTEE_WHATSAPP = '60183964019';   // Estée's WhatsApp number for the "Reply" button
+  const GAMES = ['cake', 'pop', 'scratch', 'catch'];
+
+  const T = {
+    zh: {
+      eyebrow: '生日惊喜', envTitle: '有一份惊喜，<br>送给特别的你', envHint: '点一下信封，打开看看 ✉️', friend: '亲爱的你',
+      gameNames: { cake: '🎂 许愿吹蜡烛', pop: '🎈 戳气球收祝福', scratch: '✨ 生日刮刮乐', catch: '🧺 接福气挑战' },
+      cakeEyebrow: '许个愿', cakeTitle: '先许个愿，再把蜡烛吹熄 🎂', left: n => n ? '还有 ' + n + ' 根蜡烛' : '许愿成功！',
+      hbd: '生日快乐', giftTitle: '选一份幸运礼物', giftHint: '每个礼盒里都藏着一份祝福',
+      popEyebrow: '戳气球', popTitle: '把气球全部戳破，收集你的祝福！', popGold: '最后一个金色气球，是给你的！', popLeft: n => n ? '还有 ' + n + ' 个气球' : '',
+      jarTitle: '你收集到的祝福',
+      scEyebrow: '生日刮刮乐', scTitle: '刮开看看你的生日祝福', scHint: '用手指刮开金色的部分 ✨', scCover: '刮这里', scCover2: '生日惊喜',
+      caEyebrow: '接福气', caTitle: '接住满满的福气！', caHint: '左右拖动篮子，接住掉下来的福气。只有 20 秒！', caStart: '开始 🧺',
+      caScore: n => '福气 ' + n, caTime: s => s + ' 秒', caResult: n => '你接住了 ' + n + ' 份福气！',
+      caTier: n => n >= 25 ? ['🏆', '福气满满', '今年的好运挡都挡不住！'] : n >= 12 ? ['🌟', '好运连连', '好运一个接一个来！'] : ['🍀', '平安喜乐', '平平安安就是最大的福气！'],
+      toLetter: '打开 Estée 的祝福信 💌', hb: '生日快乐',
+      msg: n => n + '，生日快乐！🎂\n\n谢谢你一直以来的信任与支持，很开心能陪伴你人生的不同阶段。\n\n愿新的一岁身体健康、事事顺心，每一天都充满美好与喜悦。',
+      reply: '在 WhatsApp 回复 Estée', another: g => '🎲 再玩一个：' + g, replyText: '谢谢 Estée 的生日祝福！😊',
+      replyNote: '如果按钮没有反应，可以直接 WhatsApp：+60 18-396 4019',
+      soundTip: '🔇 没有声音？点一下左上角的 ♪ 按钮。还是没有的话，把手机音量调高，或点 ⋮ / ··· 选择「在浏览器打开」。',
+      blessings: [['💪', '健康', '身体健康，精神满满'], ['😊', '快乐', '天天开心，笑容常在'], ['🍀', '好运', '好运连连，心想事成'], ['🙏', '平安', '出入平安，一切顺利'],
+        ['🏡', '幸福', '家庭幸福，温暖常伴'], ['🌟', '梦想', '梦想成真，越来越好'], ['🤝', '友情', '好友常伴，快乐加倍'], ['🌈', '美好', '生活精彩，处处惊喜']]
+    },
+    en: {
+      eyebrow: 'Birthday surprise', envTitle: 'A little surprise,<br>just for you', envHint: 'Tap the envelope to open it ✉️', friend: 'my friend',
+      gameNames: { cake: '🎂 Make a Wish', pop: '🎈 Balloon Pop', scratch: '✨ Birthday Scratch Card', catch: '🧺 Catch the Blessings' },
+      cakeEyebrow: 'Make a wish', cakeTitle: 'Make a wish, then blow out the candles 🎂', left: n => n ? n + (n > 1 ? ' candles' : ' candle') + ' to go' : 'Wish made!',
+      hbd: 'Happy Birthday', giftTitle: 'Pick a lucky gift', giftHint: 'Every box holds a wish for your year ahead',
+      popEyebrow: 'Balloon pop', popTitle: 'Pop every balloon to collect your wishes!', popGold: 'One more — the golden balloon is yours!', popLeft: n => n ? n + ' to go' : '',
+      jarTitle: 'Your wishes',
+      scEyebrow: 'Scratch card', scTitle: 'Scratch to reveal your birthday wish', scHint: 'Use your finger to scratch the gold ✨', scCover: 'Scratch here', scCover2: 'Birthday surprise',
+      caEyebrow: 'Catch the blessings', caTitle: 'Catch as many blessings as you can!', caHint: 'Drag the basket left and right. You have 20 seconds!', caStart: 'Start 🧺',
+      caScore: n => 'Blessings ' + n, caTime: s => s + 's', caResult: n => 'You caught ' + n + ' blessings!',
+      caTier: n => n >= 25 ? ['🏆', 'Overflowing luck', 'Nothing can stop your good fortune this year!'] : n >= 12 ? ['🌟', 'Lucky streak', 'Good things are lining up for you!'] : ['🍀', 'Peace & joy', 'A calm, happy year is the best blessing.'],
+      toLetter: "Open Estée's birthday note 💌", hb: 'Happy Birthday',
+      msg: n => 'Happy birthday, ' + n + '! 🎂\n\nThank you for your trust and support all this while. It is a joy to be part of the different chapters of your life.\n\nWishing you good health, happiness and beautiful moments throughout the year.',
+      reply: 'Reply to Estée on WhatsApp', another: g => '🎲 Play another: ' + g, replyText: 'Thank you for the birthday wishes, Estée! 😊',
+      replyNote: "If the button doesn't open WhatsApp, message +60 18-396 4019.",
+      soundTip: '🔇 No sound? Tap the ♪ button at the top. Still silent? Turn up the volume, or tap ⋮ / ··· and choose "Open in browser".',
+      blessings: [['💪', 'Health', 'Strong, well and full of energy'], ['😊', 'Joy', 'A smile for every single day'], ['🍀', 'Luck', 'Good fortune at every turn'], ['🙏', 'Peace', 'Safe journeys and smooth days'],
+        ['🏡', 'Family', 'Warmth and love at home'], ['🌟', 'Dreams', 'May your plans come true'], ['🤝', 'Friendship', 'Good friends close by'], ['🌈', 'Wonder', 'Happy surprises all year']]
+    },
+    ms: {
+      eyebrow: 'Kejutan hari jadi', envTitle: 'Satu kejutan kecil<br>untuk anda', envHint: 'Tekan sampul untuk membukanya ✉️', friend: 'sahabat',
+      gameNames: { cake: '🎂 Buat Hajat', pop: '🎈 Pecahkan Belon', scratch: '✨ Kad Gores Hari Jadi', catch: '🧺 Tangkap Rahmat' },
+      cakeEyebrow: 'Buat hajat', cakeTitle: 'Buat hajat, kemudian tiup lilin 🎂', left: n => n ? 'Tinggal ' + n + ' batang lilin' : 'Hajat sudah dibuat!',
+      hbd: 'Selamat Hari Jadi', giftTitle: 'Pilih hadiah bertuah', giftHint: 'Setiap kotak menyimpan doa untuk tahun anda',
+      popEyebrow: 'Pecahkan belon', popTitle: 'Pecahkan semua belon untuk kumpul doa anda!', popGold: 'Satu lagi — belon emas ini untuk anda!', popLeft: n => n ? 'Tinggal ' + n : '',
+      jarTitle: 'Doa untuk anda',
+      scEyebrow: 'Kad gores', scTitle: 'Gores untuk lihat ucapan hari jadi anda', scHint: 'Gunakan jari untuk menggores bahagian emas ✨', scCover: 'Gores di sini', scCover2: 'Kejutan hari jadi',
+      caEyebrow: 'Tangkap rahmat', caTitle: 'Tangkap seberapa banyak rahmat!', caHint: 'Seret bakul ke kiri dan kanan. Anda ada 20 saat!', caStart: 'Mula 🧺',
+      caScore: n => 'Rahmat ' + n, caTime: s => s + 's', caResult: n => 'Anda tangkap ' + n + ' rahmat!',
+      caTier: n => n >= 25 ? ['🏆', 'Tuah melimpah', 'Tiada yang dapat menghalang rezeki anda tahun ini!'] : n >= 12 ? ['🌟', 'Bertuah selalu', 'Perkara baik sedang menanti anda!'] : ['🍀', 'Aman & bahagia', 'Tahun yang tenang ialah rahmat terbaik.'],
+      toLetter: 'Buka ucapan daripada Estée 💌', hb: 'Selamat Hari Jadi',
+      msg: n => 'Selamat hari jadi, ' + n + '! 🎂\n\nTerima kasih atas kepercayaan dan sokongan anda selama ini. Saya gembira dapat bersama anda dalam setiap fasa kehidupan.\n\nSemoga sentiasa sihat, bahagia dan dilimpahi detik indah sepanjang tahun.',
+      reply: 'Balas kepada Estée di WhatsApp', another: g => '🎲 Main lagi: ' + g, replyText: 'Terima kasih atas ucapan hari jadi, Estée! 😊',
+      replyNote: 'Jika butang tidak berfungsi, WhatsApp terus ke +60 18-396 4019.',
+      soundTip: '🔇 Tiada bunyi? Tekan butang ♪ di atas. Jika masih senyap, kuatkan volum, atau tekan ⋮ / ··· dan pilih "Buka dalam pelayar".',
+      blessings: [['💪', 'Sihat', 'Sihat dan bertenaga sentiasa'], ['😊', 'Gembira', 'Senyuman setiap hari'], ['🍀', 'Tuah', 'Rezeki dan tuah melimpah'], ['🙏', 'Sejahtera', 'Selamat dan dipermudahkan urusan'],
+        ['🏡', 'Keluarga', 'Bahagia bersama keluarga'], ['🌟', 'Impian', 'Semoga impian tercapai'], ['🤝', 'Sahabat', 'Dikelilingi sahabat yang baik'], ['🌈', 'Indah', 'Kejutan manis sepanjang tahun']]
+    }
+  };
+
+  // Personal link: #<lang>.<name in base64url>.<game>, e.g. #zh.VGhhbSBIb2F5IFBoZW5n.pop  (name and game are optional)
+  function readHash() {
+    const m = /^#(zh|en|ms)(?:\.([A-Za-z0-9_-]*))?(?:\.(cake|pop|scratch|catch))?$/.exec(location.hash || '');
+    if (!m) return { lang: null, name: '', game: null };
+    let name = '';
+    if (m[2]) {
+      try {
+        const b64 = m[2].replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((m[2].length + 3) % 4);
+        name = new TextDecoder().decode(Uint8Array.from(atob(b64), c => c.charCodeAt(0))).slice(0, 60);
+      } catch (e) { name = ''; }
+    }
+    return { lang: m[1], name, game: m[3] || null };
+  }
+  const fromLink = readHash();
+  let lang = fromLink.lang || ((navigator.language || '').startsWith('zh') ? 'zh' : (navigator.language || '').startsWith('ms') ? 'ms' : 'en');
+  let game = fromLink.game || GAMES[Math.floor(Math.random() * GAMES.length)];
+  const name = () => fromLink.name || T[lang].friend;
+  const $ = id => document.getElementById(id);
+  const t = () => T[lang];
+  const shuffled = n => [...Array(n).keys()].sort(() => Math.random() - 0.5);
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  function applyLang() {
+    document.documentElement.lang = lang === 'zh' ? 'zh' : lang;
+    document.querySelectorAll('[data-t]').forEach(el => { el.innerHTML = t()[el.dataset.t]; });
+    document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    $('envTo').textContent = name();
+    $('gameBadge').textContent = t().gameNames[game];
+    $('hbd').textContent = t().hbd + ', ' + name() + '!';
+    $('msg').textContent = t().msg(name());
+    $('reply').href = 'https://wa.me/' + ESTEE_WHATSAPP + '?text=' + encodeURIComponent(t().replyText);
+    $('replyNote').textContent = t().replyNote;
+    $('another').textContent = t().another(t().gameNames[nextGame()]);
+    updateCount(); balloons.label(); scratch.relabel(); catcher.hud();
+    if (reward.render) reward.render();
+  }
+  document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => { lang = b.dataset.lang; click(); applyLang(); }));
+  function show(id) { document.querySelectorAll('.step').forEach(s => { s.hidden = s.id !== id; }); window.scrollTo(0, 0); }
+
+  // ---------- sound ----------
+  // Every effect is synthesised once, offline, into a small WAV and played with <audio> players. Phones treat <audio> as
+  // media, so it plays inside WhatsApp / WeChat browsers and on an iPhone in silent mode, where live Web Audio is often
+  // muted. Fallbacks: blob WAV → data: WAV → live Web Audio (the same synth code, played straight away).
+  let soundOn = true, mode = 'element', useData = false, lastErr = '', unlocked = false;
+  const SR = 22050;
+  let S = null;   // where tone() / noise() draw: { measure, end } while sizing a clip, else { ctx, dest, t0, nodes }
+  function tone(freq, start, dur, vol, type, glide) {
+    if (!S) return;
+    if (S.measure) { S.end = Math.max(S.end, start + dur + 0.1); return; }
+    const a = S.ctx, t0 = S.t0 + start, o = a.createOscillator(), g = a.createGain();
+    o.type = type || 'triangle'; o.frequency.setValueAtTime(freq, t0);
+    if (glide) o.frequency.exponentialRampToValueAtTime(glide, t0 + dur);
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol || 0.16, t0 + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+    o.connect(g); g.connect(S.dest); o.start(t0); o.stop(t0 + dur + 0.05);
+    S.nodes.push(o);
+  }
+  function noise(start, dur, vol, filter, f0, f1, q) {
+    if (!S) return;
+    if (S.measure) { S.end = Math.max(S.end, start + dur + 0.1); return; }
+    const a = S.ctx, t0 = S.t0 + start;
+    if (!a._noise) { a._noise = a.createBuffer(1, a.sampleRate, a.sampleRate); const d = a._noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    const s = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+    s.buffer = a._noise; f.type = filter; f.Q.value = q || 1;
+    f.frequency.setValueAtTime(Math.min(f0, a.sampleRate * 0.45), t0); if (f1) f.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + Math.min(0.03, dur / 3)); g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+    s.connect(f); f.connect(g); g.connect(S.dest); s.start(t0, Math.random() * 0.5); s.stop(t0 + dur + 0.05);
+    S.nodes.push(s);
+  }
+
+  // ----- the effects (drawn with tone / noise) -----
+  const SCALE = [523, 587, 659, 698, 784, 880, 988, 1047, 1175, 1319];
+  const HB = [['G4', .3], ['G4', .1], ['A4', .4], ['G4', .4], ['C5', .4], ['B4', .8], ['G4', .3], ['G4', .1], ['A4', .4], ['G4', .4], ['D5', .4], ['C5', .8],
+    ['G4', .3], ['G4', .1], ['G5', .4], ['E5', .4], ['C5', .4], ['B4', .4], ['A4', .8], ['F5', .3], ['F5', .1], ['E5', .4], ['C5', .4], ['D5', .4], ['C5', 1]];
+  const NOTE = { G4: 392, A4: 440, B4: 494, C5: 523, D5: 587, E5: 659, F5: 698, G5: 784 };
+  const FX = {
+    click: () => { tone(1500, 0, 0.05, 0.05, 'sine'); tone(2200, 0.01, 0.04, 0.03, 'sine'); },
+    chime: () => [1047, 1319, 1568].forEach((f, i) => tone(f, i * 0.07, 0.5, 0.08, 'sine')),
+    rustle: () => { for (let i = 0; i < 6; i++) noise(i * 0.06 + Math.random() * 0.03, 0.07, 0.12, 'bandpass', 3500 + Math.random() * 2500, 0, 0.8); },
+    whoosh: i => { noise(0, 0.38, 0.22, 'bandpass', 1400, 280, 0.7); noise(0.05, 0.18, 0.04, 'highpass', 6000); tone(SCALE[i] || 988, 0.12, 0.4, 0.09, 'sine'); },
+    pop: () => { noise(0, 0.07, 0.3, 'highpass', 900); tone(170, 0, 0.14, 0.18, 'sine', 55); },
+    balloonPop: i => { noise(0, 0.09, 0.4, 'highpass', 1200); tone(240, 0, 0.1, 0.12, 'sine', 70); tone(SCALE[i % SCALE.length] * 2, 0.06, 0.35, 0.07, 'sine'); },
+    partyHorn: () => { tone(330, 0.05, 0.55, 0.06, 'sawtooth', 560); tone(332, 0.05, 0.55, 0.04, 'square', 562); },
+    crackle: () => { for (let i = 0; i < 18; i++) noise(0.1 + Math.random() * 0.9, 0.025, 0.06 + Math.random() * 0.05, 'highpass', 2500); },
+    drumroll: dur => { for (let s = 0; s < dur; s += 0.045) noise(s, 0.04, 0.05 + 0.12 * (s / dur), 'bandpass', 1800, 0, 1.2); tone(120, dur, 0.25, 0.2, 'sine', 60); },
+    sparkle: () => [1568, 1976, 2349, 2637, 3136, 3951].forEach((f, i) => tone(f * (1 + (Math.random() - 0.5) * 0.01), i * 0.055, 0.6, 0.05, 'sine')),
+    harp: () => [523, 659, 784, 1047, 1319, 1568, 2093].forEach((f, i) => tone(f, i * 0.08, 1.1, 0.07, 'triangle')),
+    scratchTick: () => noise(0, 0.05, 0.05, 'bandpass', 4200 + Math.random() * 1500, 0, 2),
+    catchBlip: n => { tone(SCALE[n % SCALE.length] * 1.5, 0, 0.16, 0.08, 'square'); tone(SCALE[n % SCALE.length] * 3, 0.03, 0.12, 0.03, 'sine'); },
+    tick: () => tone(1800, 0, 0.04, 0.05, 'square'),
+    fanfare: () => [[523, 0], [659, 0.12], [784, 0.24], [1047, 0.36], [784, 0.52], [1047, 0.64]].forEach(([f, s], i) => tone(f, s, i === 5 ? 0.9 : 0.18, 0.09, 'square')),
+    melody: () => { let s = 0.1; HB.forEach(([n, d]) => { tone(NOTE[n], s, d * 0.95, 0.12, 'triangle'); s += d; }); },   // public-domain tune
+    musicBox: () => { let s = 0.1; HB.forEach(([n, d]) => { tone(NOTE[n] * 2, s, 1.2, 0.06, 'sine'); tone(NOTE[n] * 4, s, 0.5, 0.015, 'sine'); s += d * 1.35; }); }
+  };
+
+  // ----- bake an effect into a WAV clip -----
+  const clips = {};   // key -> { ready, blob, bytes, data }
+  function wavBytes(buf) {
+    const d = buf.getChannelData(0), n = d.length, b = new ArrayBuffer(44 + n * 2), v = new DataView(b);
+    const w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, buf.sampleRate, true); v.setUint32(28, buf.sampleRate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+    for (let i = 0; i < n; i++) v.setInt16(44 + i * 2, Math.max(-1, Math.min(1, d[i])) * 32767, true);
+    return new Uint8Array(b);
+  }
+  function bake(key, draw) {
+    if (clips[key]) return clips[key].p;
+    const c = clips[key] = { ready: false };
+    c.p = new Promise((ok, fail) => {
+      const OC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      if (!OC) { fail(new Error('no OfflineAudioContext')); return; }
+      S = { measure: true, end: 0 }; draw(); const len = Math.max(0.1, S.end); S = null;
+      const oc = new OC(1, Math.ceil(SR * len), SR), g = oc.createGain();
+      g.gain.value = 0.9; g.connect(oc.destination);
+      S = { ctx: oc, dest: g, t0: 0.01, nodes: [] }; draw(); S = null;
+      oc.oncomplete = e => ok(e.renderedBuffer);
+      const p = oc.startRendering(); if (p && p.then) p.then(ok, fail);
+    }).then(buf => { c.bytes = wavBytes(buf); c.blob = URL.createObjectURL(new Blob([c.bytes], { type: 'audio/wav' })); c.ready = true; return c; },
+      e => { lastErr = 'bake: ' + e.message; mode = 'live'; });
+    return c.p;
+  }
+  function dataUrl(c) {
+    if (!c.data) { let s = ''; for (let i = 0; i < c.bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, c.bytes.subarray(i, i + 0x8000)); c.data = 'data:audio/wav;base64,' + btoa(s); }
+    return c.data;
+  }
+  // bake everything up front, the sounds needed first at the front of the queue
+  const BAKE = [['click', FX.click], ['rustle', FX.rustle], ['chime', FX.chime]];
+  for (let i = 0; i < 5; i++) BAKE.push(['whoosh' + i, () => FX.whoosh(i)]);
+  ['pop', 'partyHorn', 'crackle', 'sparkle', 'melody', 'harp', 'musicBox', 'scratchTick', 'tick', 'fanfare'].forEach(k => BAKE.push([k, FX[k]]));
+  BAKE.push(['drumroll0.7', () => FX.drumroll(0.7)]);
+  for (let i = 0; i < SCALE.length; i++) BAKE.push(['balloonPop' + i, () => FX.balloonPop(i)], ['catchBlip' + i, () => FX.catchBlip(i)]);
+  BAKE.reduce((p, [k, d]) => p.then(() => bake(k, d)), Promise.resolve());
+
+  // ----- players: a small pool for effects (they overlap) and one for the melodies -----
+  const SILENT = (function () {   // 0.1s of silence, played inside the first tap so every player may sound later
+    const n = 2205, b = new Uint8Array(44 + n), v = new DataView(b.buffer);
+    const w = (o, s) => { for (let i = 0; i < s.length; i++) b[o + i] = s.charCodeAt(i); };
+    w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, 22050, true); v.setUint32(28, 22050, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true); w(36, 'data'); v.setUint32(40, n, true); b.fill(128, 44);
+    let s = ''; b.forEach(x => { s += String.fromCharCode(x); }); return 'data:audio/wav;base64,' + btoa(s);
+  })();
+  function player() {
+    const el = new Audio(); el.setAttribute('playsinline', ''); el.setAttribute('webkit-playsinline', ''); el.preload = 'auto';
+    el.addEventListener('error', () => {   // could not load the WAV: try the data: copy, then live Web Audio
+      if (!el.dataset.key) return;
+      lastErr = 'media error ' + (el.error && el.error.code) + (useData ? ' (data)' : ' (blob)');
+      if (!useData) { useData = true; playClip(el.dataset.key, el === musicEl); } else mode = 'live';
+    });
+    return el;
+  }
+  const pool = Array.from({ length: 6 }, player), musicEl = player();
+  let nextEl = 0;
+  function playClip(key, isMusic) {
+    const c = clips[key], el = isMusic ? musicEl : pool[nextEl++ % pool.length];
+    el.dataset.key = key;
+    const src = useData ? dataUrl(c) : c.blob;
+    if (el.src !== src) el.src = src;
+    try { el.currentTime = 0; } catch (e) {}
+    const p = el.play();
+    if (p && p.then) p.then(() => { $('soundTip').hidden = true; }, err => { if (err.name !== 'AbortError') { lastErr = err.name; if (err.name === 'NotAllowedError') $('soundTip').hidden = false; } });
+  }
+
+  // ----- live Web Audio (last fallback, and for a sound asked for before it has been baked) -----
+  let ac = null, liveMusic = [];
+  function playLive(draw, isMusic) {
+    if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; } }
+    if (ac.state !== 'running') ac.resume().catch(() => {});
+    const g = ac.createGain(); g.gain.value = 0.9; g.connect(ac.destination);
+    S = { ctx: ac, dest: g, t0: ac.currentTime + 0.01, nodes: [] }; draw();
+    if (isMusic) liveMusic = liveMusic.concat(S.nodes);
+    S = null;
+  }
+
+  function play(key, draw, isMusic) {
+    if (!soundOn) return;
+    const c = clips[key];
+    if (mode === 'element' && c && c.ready) playClip(key, isMusic);
+    else { playLive(draw, isMusic); if (!c) bake(key, draw); }
+  }
+  function stopMusic() {
+    musicEl.pause();
+    liveMusic.forEach(o => { try { o.stop(); } catch (e) {} }); liveMusic = [];
+  }
+  function unlock() {
+    if (unlocked || !soundOn) return;
+    unlocked = true;
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+    pool.concat(musicEl).forEach(el => { if (el.src) return; el.src = SILENT; const p = el.play(); if (p && p.catch) p.catch(() => {}); });
+  }
+  const out = unlock;
+  ['pointerdown', 'touchend', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, unlock, { capture: true, passive: true }));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stopMusic(); });   // no music from a background tab
+  $('sound').addEventListener('click', () => {
+    soundOn = !soundOn; $('sound').setAttribute('aria-pressed', String(soundOn)); $('sound').textContent = soundOn ? '♪ On' : '♪ Off';
+    if (soundOn) { unlock(); chime(); } else { stopMusic(); pool.forEach(el => el.pause()); $('soundTip').hidden = true; }
+  });
+
+  const click = () => play('click', FX.click);
+  const chime = () => play('chime', FX.chime);
+  const rustle = () => play('rustle', FX.rustle);
+  function whoosh(i) { play('whoosh' + i, () => FX.whoosh(i)); }
+  const pop = () => play('pop', FX.pop);
+  const balloonPop = i => play('balloonPop' + (i % SCALE.length), () => FX.balloonPop(i));
+  const partyHorn = () => play('partyHorn', FX.partyHorn);
+  const crackle = () => play('crackle', FX.crackle);
+  function drumroll(dur) { play('drumroll' + dur, () => FX.drumroll(dur)); }
+  const sparkle = () => play('sparkle', FX.sparkle);
+  const harp = () => play('harp', FX.harp);
+  const scratchTick = () => play('scratchTick', FX.scratchTick);
+  const catchBlip = n => play('catchBlip' + (n % SCALE.length), () => FX.catchBlip(n));
+  const tick = () => play('tick', FX.tick);
+  const fanfare = () => play('fanfare', FX.fanfare);
+  function melody() { play('melody', FX.melody, true); }
+  function musicBox() { play('musicBox', FX.musicBox, true); }
+
+  // open the game link ending in #sounddiag to see which sound path this phone uses
+  if (location.hash === '#sounddiag') {
+    const box = document.createElement('pre');
+    box.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:9;margin:0;padding:8px;background:#000c;color:#9f9;font:11px/1.4 monospace;border-radius:6px;white-space:pre-wrap;max-width:90vw';
+    document.body.appendChild(box);
+    setInterval(() => {
+      const baked = Object.values(clips).filter(c => c.ready).length;
+      box.textContent = 'mode: ' + mode + (useData ? ' (data)' : ' (blob)') + '\nbaked: ' + baked + ' / ' + BAKE.length +
+        '\nmusic player: ' + (musicEl.paused ? 'paused' : 'playing') + ' t=' + musicEl.currentTime.toFixed(1) +
+        '\nfx playing: ' + pool.filter(el => !el.paused).length + '\nlast error: ' + (lastErr || '-');
+    }, 400);
+  }
+
+  // ---------- confetti and stars ----------
+  const fx = $('fx'), fxc = fx.getContext('2d');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let parts = [], fxRunning = false;
+  function confetti(n, x, y) {
+    if (reduced) return;
+    fx.width = innerWidth * devicePixelRatio; fx.height = innerHeight * devicePixelRatio; fx.style.width = innerWidth + 'px'; fx.style.height = innerHeight + 'px';
+    const cols = ['#e6c27a', '#f2b8b5', '#fbf3e4', '#9fc6e8', '#c9a7eb', '#f39c34'];
+    const ox = x == null ? innerWidth / 2 : x, oy = y == null ? innerHeight * 0.45 : y, spread = x == null ? 14 : 8;
+    for (let i = 0; i < n; i++) parts.push({ x: ox, y: oy, vx: (Math.random() - 0.5) * spread, vy: -Math.random() * (spread - 1) - 3, r: Math.random() * 6 + 4,
+      c: cols[Math.random() * cols.length | 0], a: Math.random() * 6, va: (Math.random() - 0.5) * 0.4, life: 200 });
+    if (!fxRunning) { fxRunning = true; requestAnimationFrame(stepFx); }
+  }
+  function stepFx() {
+    fxc.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0); fxc.clearRect(0, 0, innerWidth, innerHeight);
+    parts.forEach(p => { p.vy += 0.32; p.vx *= 0.99; p.x += p.vx; p.y += p.vy; p.a += p.va; p.life--;
+      fxc.save(); fxc.translate(p.x, p.y); fxc.rotate(p.a); fxc.fillStyle = p.c; fxc.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); fxc.restore(); });
+    parts = parts.filter(p => p.life > 0 && p.y < innerHeight + 40);
+    if (parts.length) requestAnimationFrame(stepFx); else { fxRunning = false; fxc.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+  (function stars() {
+    const c = $('stars'), x = c.getContext('2d'); let pts = [];
+    function size() { c.width = innerWidth; c.height = innerHeight; pts = Array.from({ length: 60 }, () => ({ x: Math.random() * innerWidth, y: Math.random() * innerHeight * 0.8, r: Math.random() * 1.4 + 0.3, p: Math.random() * 6 })); }
+    size(); addEventListener('resize', size);
+    (function draw(tm) {
+      x.clearRect(0, 0, c.width, c.height);
+      pts.forEach(s => { x.globalAlpha = reduced ? 0.6 : 0.35 + 0.35 * Math.sin(tm / 900 + s.p); x.fillStyle = '#f6e7c4'; x.beginPath(); x.arc(s.x, s.y, s.r, 0, Math.PI * 2); x.fill(); });
+      if (!reduced) requestAnimationFrame(draw);
+    })(0);
+  })();
+
+  // ---------- shared reward screen ----------
+  const reward = { render: null };
+  function showReward(title, renderFn) {
+    reward.render = () => { $('rewardTitle').textContent = title(); $('reward').innerHTML = renderFn(); };
+    reward.render(); $('toLetter').hidden = false; show('s-reward');
+  }
+  const blessingCard = k => { const [icon, word, line] = t().blessings[k]; return '<div class="blessing"><div class="icon">' + icon + '</div><div class="word">' + word + '</div><p>' + line + '</p></div>'; };
+  $('toLetter').addEventListener('click', () => { show('s-letter'); rustle(); harp(); setTimeout(musicBox, 1300); });
+  $('reply').addEventListener('click', click);
+
+  // ---------- envelope -> chosen game ----------
+  $('envelope').addEventListener('click', () => {
+    if ($('envelope').classList.contains('open')) return;
+    out(); rustle(); setTimeout(chime, 320);
+    $('envelope').classList.add('open');
+    setTimeout(startGame, reduced ? 0 : 750);
+  });
+  function startGame() {
+    if (game === 'cake') { cake.reset(); show('s-cake'); }
+    if (game === 'pop') { show('s-pop'); balloons.start(); }
+    if (game === 'scratch') { show('s-scratch'); scratch.start(); }
+    if (game === 'catch') { show('s-catch'); catcher.reset(); }
+  }
+  const nextGame = () => GAMES[(GAMES.indexOf(game) + 1) % GAMES.length];
+  $('another').addEventListener('click', () => {
+    stopMusic(); click(); balloons.stop(); catcher.stop();
+    game = nextGame(); reward.render = null; $('toLetter').hidden = true;
+    applyLang(); startGame();
+  });
+
+  // ---------- game 1: Make a Wish ----------
+  const CANDLES = 5;
+  let lit = CANDLES;
+  for (let i = 0; i < CANDLES; i++) {
+    const b = document.createElement('button');
+    b.className = 'candle'; b.type = 'button'; b.setAttribute('aria-label', 'Candle ' + (i + 1));
+    b.innerHTML = '<span class="stick"></span><span class="flame"></span><span class="smoke"></span>';
+    b.addEventListener('click', () => {
+      if (b.classList.contains('out')) return;
+      whoosh(CANDLES - lit); b.classList.add('out'); lit--; updateCount();
+      if (lit === 0) {
+        setTimeout(() => { pop(); partyHorn(); crackle(); confetti(180); }, 350);
+        setTimeout(melody, 1000);
+        setTimeout(() => { show('s-gifts'); confetti(120); }, reduced ? 300 : 1900);
+      }
+    });
+    $('candles').appendChild(b);
+  }
+  function updateCount() { $('count').textContent = t().left(lit); }
+  const GIFT_COLOURS = ['#8e2236', '#2f6f73', '#5b4b8a'];
+  let giftOrder = shuffled(8);
+  GIFT_COLOURS.forEach((c, i) => {
+    const g = document.createElement('button');
+    g.className = 'gift'; g.type = 'button'; g.style.setProperty('--c', c); g.setAttribute('aria-label', 'Gift ' + (i + 1));
+    g.innerHTML = '<span class="box"></span><span class="lid"></span><span class="bowtie"></span>';
+    g.addEventListener('click', () => {
+      if (g.classList.contains('opened') || g.classList.contains('shaking')) return;
+      g.classList.add('shaking'); drumroll(0.7);
+      setTimeout(() => {
+        g.classList.remove('shaking'); g.classList.add('opened');
+        pop(); sparkle(); crackle(); confetti(60);
+        showReward(() => t().hbd + ', ' + name() + '!', () => blessingCard(giftOrder[i]));
+      }, reduced ? 0 : 750);
+    });
+    $('gifts').appendChild(g);
+  });
+  const cake = {
+    reset() {
+      lit = CANDLES; giftOrder = shuffled(8);
+      document.querySelectorAll('.candle, .gift').forEach(el => el.classList.remove('out', 'opened', 'shaking'));
+      updateCount();
+    }
+  };
+
+  // ---------- game 2: Balloon Pop ----------
+  const balloons = (() => {
+    const COLS = [['#f7a8c4', '#d9587f'], ['#9fc6e8', '#4f86c6'], ['#fbe39a', '#e0a92e'], ['#b9b4f2', '#6f63c9'], ['#a8e6cf', '#3fa57f'], ['#f9c09f', '#e07b4a'], ['#f2b8b5', '#c2575a'], ['#c9a7eb', '#8a55c9']];
+    let items = [], popped = 0, words = [], raf = 0, gold = false, last = 0;
+    const sky = $('sky');
+    function make(i, isGold) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'balloon' + (isGold ? ' gold' : '');
+      const [c, c2] = isGold ? ['#f6dc93', '#c99a3e'] : COLS[i % COLS.length];
+      b.style.setProperty('--c', c); b.style.setProperty('--c2', c2);
+      b.setAttribute('aria-label', isGold ? 'Golden balloon' : 'Balloon ' + (i + 1));
+      b.innerHTML = '<span class="b-body"></span><span class="b-knot"></span><span class="b-string"></span>' + (isGold ? '<span class="b-name"></span>' : '');
+      const W = sky.clientWidth, H = sky.clientHeight;
+      const it = { el: b, i, gold: isGold, x: isGold ? (W - 104) / 2 : 8 + Math.random() * Math.max(10, W - 80), y: isGold ? H + 20 : H * 0.25 + Math.random() * H,   // first balloons already in view
+        vy: isGold ? 0.55 : 0.9 + Math.random() * 0.9, sway: Math.random() * 6, done: false };
+      b.addEventListener('click', ev => hit(it, ev));
+      sky.appendChild(b); items.push(it);
+      if (isGold) b.querySelector('.b-name').textContent = name();
+      return it;
+    }
+    function hit(it, ev) {
+      if (it.done) return;
+      it.done = true; it.el.remove();
+      confetti(it.gold ? 160 : 24, ev.clientX || innerWidth / 2, ev.clientY || innerHeight / 2);
+      if (it.gold) {
+        pop(); partyHorn(); crackle(); setTimeout(melody, 700);
+        setTimeout(() => showReward(() => t().hbd + ', ' + name() + '!', () => '<div class="blessing"><div class="word">' + t().jarTitle + '</div><div class="jar">' +
+          words.map(k => '<span class="chip">' + t().blessings[k][0] + ' ' + t().blessings[k][1] + '</span>').join('') + '</div></div>'), reduced ? 200 : 1500);
+        return;
+      }
+      balloonPop(popped); popped++;
+      words.push(it.i);
+      const k = it.i, chip = document.createElement('span');
+      chip.className = 'chip'; chip.dataset.k = k; chip.textContent = t().blessings[k][0] + ' ' + t().blessings[k][1]; $('jar').appendChild(chip);
+      label();
+      if (popped === 8) { gold = true; setTimeout(() => { sparkle(); make(0, true); label(); }, 500); }
+    }
+    function frame(ts) {
+      const dt = last ? Math.min(3, (ts - last) / 16.7) : 1; last = ts;
+      const H = sky.clientHeight, W = sky.clientWidth;
+      items.forEach(it => {
+        if (it.done) return;
+        it.y -= it.vy * dt; it.sway += 0.03 * dt;
+        if (it.y < -150) { it.y = H + 20; it.x = it.gold ? (W - 104) / 2 : 8 + Math.random() * Math.max(10, W - 80); }
+        if (it.gold && it.y < H * 0.18) it.vy = 0;   // the golden balloon waits to be popped
+        it.el.style.transform = 'translate(' + (it.x + Math.sin(it.sway) * 8) + 'px,' + it.y + 'px)';
+      });
+      raf = requestAnimationFrame(frame);
+    }
+    function label() {
+      $('popTitle').textContent = gold ? t().popGold : t().popTitle;
+      $('popCount').textContent = gold ? '' : t().popLeft(8 - popped);
+      document.querySelectorAll('#jar .chip').forEach(c => { const k = +c.dataset.k; c.textContent = t().blessings[k][0] + ' ' + t().blessings[k][1]; });
+      items.forEach(it => { if (it.gold && !it.done) it.el.querySelector('.b-name').textContent = name(); });
+    }
+    function stop() { cancelAnimationFrame(raf); raf = 0; }
+    function start() {
+      stop(); sky.innerHTML = ''; $('jar').innerHTML = ''; items = []; popped = 0; words = []; gold = false; last = 0;
+      requestAnimationFrame(() => { shuffled(8).forEach(i => make(i, false)); label(); raf = requestAnimationFrame(frame); });
+    }
+    return { start, stop, label };
+  })();
+
+  // ---------- game 3: Scratch Card ----------
+  const scratch = (() => {
+    const cv = $('foil'), ctx = cv.getContext('2d');
+    let k = 0, down = false, lastPt = null, moves = 0, finished = false;
+    function paintFoil() {
+      const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1;
+      cv.width = Math.max(1, r.width * d); cv.height = Math.max(1, r.height * d);
+      ctx.setTransform(d, 0, 0, d, 0, 0); ctx.globalCompositeOperation = 'source-over';
+      const W = r.width, H = r.height, g = ctx.createLinearGradient(0, 0, W, H);
+      g.addColorStop(0, '#b98a3e'); g.addColorStop(0.3, '#f1d38a'); g.addColorStop(0.55, '#c99a3e'); g.addColorStop(0.8, '#f5dc98'); g.addColorStop(1, '#b0832f');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      ctx.globalAlpha = 0.18; ctx.fillStyle = '#fff';
+      for (let y = 10; y < H; y += 22) for (let x = (y / 22 % 2) * 11; x < W; x += 22) { ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill(); }
+      ctx.globalAlpha = 1; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#5b3a12';
+      ctx.font = '700 15px Mulish, sans-serif'; ctx.fillText(t().scCover2.toUpperCase(), W / 2, H / 2 - 22);
+      ctx.font = (lang === 'zh' ? '700 30px "Noto Serif SC", serif' : '400 40px "Great Vibes", cursive'); ctx.fillText(t().scCover + ' ✨', W / 2, H / 2 + 14);
+    }
+    function prize() {
+      const [icon, word, line] = t().blessings[k];
+      $('prize').innerHTML = '<div class="icon">🎉</div><div class="who">' + t().hbd + ', ' + escapeHtml(name()) + '!</div><div class="word">' + icon + ' ' + word + '</div><p>' + line + '</p>';
+    }
+    function scratchAt(x, y) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 46;
+      ctx.beginPath(); ctx.moveTo(lastPt ? lastPt.x : x, lastPt ? lastPt.y : y); ctx.lineTo(x, y); ctx.stroke();
+      lastPt = { x, y };
+      if (++moves % 3 === 0) scratchTick();
+      if (moves % 8 === 0) check();
+    }
+    function check() {
+      if (finished) return;
+      const d = ctx.getImageData(0, 0, cv.width, cv.height).data; let clear = 0, total = 0;
+      for (let i = 3; i < d.length; i += 4 * 24) { total++; if (d[i] < 40) clear++; }
+      if (clear / total > 0.5) win();
+    }
+    function win() {
+      finished = true; cv.classList.add('done');
+      pop(); sparkle(); crackle(); confetti(160); setTimeout(melody, 600);
+      setTimeout(() => showReward(() => t().hbd + ', ' + name() + '!', () => blessingCard(k)), reduced ? 300 : 2600);
+    }
+    const pt = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    cv.addEventListener('pointerdown', e => { down = true; lastPt = null; cv.setPointerCapture(e.pointerId); const p = pt(e); scratchAt(p.x, p.y); });
+    cv.addEventListener('pointermove', e => { if (!down) return; const p = pt(e); scratchAt(p.x, p.y); });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => cv.addEventListener(ev, () => { down = false; lastPt = null; }));
+    function start() { k = Math.floor(Math.random() * 8); finished = false; moves = 0; cv.classList.remove('done'); prize(); requestAnimationFrame(paintFoil); }
+    function relabel() { if (!$('s-scratch').hidden) { prize(); if (!finished && moves === 0) paintFoil(); } }
+    return { start, relabel };
+  })();
+
+  // ---------- game 4: Catch the Blessings ----------
+  const catcher = (() => {
+    const cv = $('catchCanvas'), ctx = cv.getContext('2d'), W = 380, H = 480, LEN = 20;
+    const ITEMS = ['🎁', '⭐', '💖', '🍀', '🎂', '🌟', '💐'];
+    let items = [], score = 0, left = LEN, running = false, raf = 0, last = 0, spawnAt = 0, endAt = 0, bx = W / 2, popups = [];
+    const EMOJI = '"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#000';
+      ctx.font = '34px ' + EMOJI; items.forEach(it => { ctx.save(); ctx.translate(it.x, it.y); ctx.rotate(Math.sin(it.r) * 0.3); ctx.fillText(it.e, 0, 0); ctx.restore(); });
+      ctx.font = '62px ' + EMOJI; ctx.fillText('🧺', bx, H - 44);
+      ctx.font = '800 20px Mulish, sans-serif'; popups.forEach(p => { ctx.globalAlpha = p.life / 30; ctx.fillStyle = '#e6c27a'; ctx.fillText('+1', p.x, p.y); ctx.globalAlpha = 1; });
+    }
+    function frame(ts) {
+      const dt = last ? Math.min(3, (ts - last) / 16.7) : 1; last = ts;
+      if (ts > spawnAt) { items.push({ x: 24 + Math.random() * (W - 48), y: -20, v: 2.4 + Math.random() * 2.4 + (LEN - left) * 0.08, e: ITEMS[Math.random() * ITEMS.length | 0], r: Math.random() * 6 }); spawnAt = ts + 380 + Math.random() * 260; }
+      items.forEach(it => { it.y += it.v * dt; it.r += 0.08 * dt; });
+      items = items.filter(it => {
+        if (it.y > H - 72 && it.y < H - 20 && Math.abs(it.x - bx) < 44) { score++; catchBlip(score); popups.push({ x: it.x, y: H - 90, life: 30 }); return false; }
+        return it.y < H + 30;
+      });
+      popups.forEach(p => { p.y -= 1.2 * dt; p.life -= dt; }); popups = popups.filter(p => p.life > 0);
+      const remain = Math.max(0, Math.ceil((endAt - ts) / 1000));
+      if (remain !== left) { left = remain; if (left <= 3 && left > 0) tick(); }
+      hud(); draw();
+      if (ts >= endAt) return finish();
+      raf = requestAnimationFrame(frame);
+    }
+    function finish() {
+      running = false; cancelAnimationFrame(raf); items = []; draw();
+      fanfare(); crackle(); confetti(160); setTimeout(melody, 900);
+      const n = score;
+      setTimeout(() => showReward(() => t().caResult(n), () => { const [icon, word, line] = t().caTier(n); return '<div class="blessing"><div class="icon">' + icon + '</div><div class="word">' + word + '</div><p>' + line + '</p></div>'; }), reduced ? 300 : 1800);
+    }
+    function move(e) { const r = cv.getBoundingClientRect(); bx = Math.max(36, Math.min(W - 36, (e.clientX - r.left) * (W / r.width))); if (!running) draw(); }
+    cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); move(e); });
+    cv.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' || e.buttons || e.pressure) move(e); });
+    $('caGo').addEventListener('click', () => {
+      $('catchStart').hidden = true; score = 0; left = LEN; items = []; popups = []; running = true; last = 0;
+      chime(); const now = performance.now(); spawnAt = now + 300; endAt = now + LEN * 1000; raf = requestAnimationFrame(frame);
+    });
+    function hud() { $('caScore').textContent = t().caScore(score); $('caTime').textContent = '⏱ ' + t().caTime(left); }
+    function reset() { stop(); score = 0; left = LEN; items = []; popups = []; bx = W / 2; $('catchStart').hidden = false; hud(); draw(); }
+    function stop() { running = false; cancelAnimationFrame(raf); }
+    return { reset, stop, hud };
+  })();
+
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+  applyLang();
+})();
+</script>
+
+</body></html>
