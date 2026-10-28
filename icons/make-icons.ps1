@@ -9,7 +9,7 @@
 #>
 param(
   [ValidateSet('text', 'bauble', 'reindeer', 'snowman', 'gift')][string]$Style = 'text',
-  [string]$Font = 'Noto Serif SC Black',   # for -Style text
+  [string]$Font = 'Noto Sans SC Black',   # for -Style text
   [string]$PreviewTo = ''
 )
 Add-Type -AssemblyName System.Drawing
@@ -215,7 +215,7 @@ function Draw-Text {
   $path.FillMode = 'Winding'   # overlapping strokes stay solid instead of cutting holes
   $path.AddString($word, $family, [int][Drawing.FontStyle]::Regular, 400, (P 0 0), [Drawing.StringFormat]::GenericTypographic)
   $b = $path.GetBounds()
-  $scale = [Math]::Min(600 / $b.Width, 330 / $b.Height)
+  $scale = [Math]::Min(700 / $b.Width, 380 / $b.Height)   # as big as the round Android crop allows
   $m = New-Object Drawing.Drawing2D.Matrix
   $m.Translate([float](512 - ($b.X + $b.Width / 2) * $scale), [float](512 - ($b.Y + $b.Height / 2) * $scale))
   $m.Scale([float]$scale, [float]$scale)
