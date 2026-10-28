@@ -1,0 +1,22 @@
+{
+  "name": "Estée 的节日小游戏",
+  "short_name": "Estée 节日",
+  "description": "圣诞小测验和生日惊喜小游戏 · Christmas quiz and birthday surprise games by Estée, Your Genuine Advisor",
+  "lang": "zh-Hans",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#3d0a14",
+  "theme_color": "#8e1b2a",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "圣诞小测验", "url": "christmas/#zh", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "生日惊喜", "url": "birthday/#zh", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
