@@ -1,6 +1,6 @@
 // Offline helper for the installed app: always try the network first (so updates show straight away),
 // and fall back to the last saved copy when the phone is offline.
-const CACHE = 'greetings-v2';
+const CACHE = 'greetings-v3';
 const CORE = ['./', './christmas/', './birthday/', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', e => {
