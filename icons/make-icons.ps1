@@ -1,5 +1,5 @@
 <#
-  Draws the home-screen app icon: a cheerful character on a cherry-red ground with confetti and sparkles.
+  Draws the home-screen app icon. Default (-Style text): the word "festival" (two Chinese characters) in red on a plain cream ground.
   Characters: bauble (golden bauble in a Santa hat), reindeer, snowman, gift.
 
   Make the app icons (all sizes, into this folder):  powershell -ExecutionPolicy Bypass -File make-icons.ps1 -Style reindeer
@@ -8,7 +8,8 @@
   Everything important stays inside the central safe circle, so Android can crop the icon to a circle or squircle ("maskable").
 #>
 param(
-  [ValidateSet('bauble', 'reindeer', 'snowman', 'gift')][string]$Style = 'reindeer',
+  [ValidateSet('text', 'bauble', 'reindeer', 'snowman', 'gift')][string]$Style = 'text',
+  [string]$Font = 'Noto Serif SC Black',   # for -Style text
   [string]$PreviewTo = ''
 )
 Add-Type -AssemblyName System.Drawing
@@ -26,31 +27,41 @@ $bmp = New-Object Drawing.Bitmap $S, $S
 $g = [Drawing.Graphics]::FromImage($bmp)
 $g.SmoothingMode = 'AntiAlias'; $g.InterpolationMode = 'HighQualityBicubic'; $g.PixelOffsetMode = 'HighQuality'
 
-# ---------- shared background: bright cherry red, warm glow, confetti, sparkles ----------
-$g.FillRectangle((Grad 0 0 0 $S '#e8364f' '#7a0f22'), 0, 0, $S, $S)
-$glowPath = Circle 512 572 422
-$glow = New-Object Drawing.Drawing2D.PathGradientBrush $glowPath
-$glow.CenterColor = C '#ffd56b' 120; $glow.SurroundColors = @((C '#ffd56b' 0))
-$g.FillPath($glow, $glowPath)
-$rnd = New-Object Random 11
-$confetti = '#ffd56b', '#ffffff', '#3fbf7f', '#ff9ec7', '#7fd3ff'
-for ($i = 0; $i -lt 46; $i++) {
-  $x = $rnd.Next($S); $y = $rnd.Next($S)
-  if ([Math]::Sqrt([Math]::Pow($x - 512, 2) + [Math]::Pow($y - 560, 2)) -lt 330) { continue }   # keep the character clear
-  $g.TranslateTransform($x, $y); $g.RotateTransform($rnd.Next(180))
-  $g.FillRectangle((Brush $confetti[$rnd.Next($confetti.Count)] 230), -11, -5, 22, 10)
-  $g.ResetTransform()
-}
 function Sparkle([double]$x, [double]$y, [double]$r, [string]$hex) {
   $path = New-Object Drawing.Drawing2D.GraphicsPath
   $k = $r * 0.22
   $path.AddPolygon([Drawing.PointF[]]@((P $x ($y - $r)), (P ($x + $k) ($y - $k)), (P ($x + $r) $y), (P ($x + $k) ($y + $k)), (P $x ($y + $r)), (P ($x - $k) ($y + $k)), (P ($x - $r) $y), (P ($x - $k) ($y - $k))))
   $g.FillPath((Brush $hex), $path)
 }
-Sparkle 190 300 46 '#fff3c4'
-Sparkle 850 520 38 '#fff3c4'
-Sparkle 230 760 30 '#ffffff'
-Sparkle 815 790 44 '#ffd56b'
+
+if ($Style -eq 'text') {
+  # ---------- plain cream (beige) ground, a little lighter in the middle ----------
+  $g.FillRectangle((Grad 0 0 0 $S '#f7ecd8' '#ecdcbf'), 0, 0, $S, $S)
+  $lightPath = Circle 512 512 520
+  $light = New-Object Drawing.Drawing2D.PathGradientBrush $lightPath
+  $light.CenterColor = C '#fffaf0' 230; $light.SurroundColors = @((C '#fffaf0' 0))
+  $g.FillPath($light, $lightPath)
+} else {
+  # ---------- festive ground: bright cherry red, warm glow, confetti, sparkles ----------
+  $g.FillRectangle((Grad 0 0 0 $S '#e8364f' '#7a0f22'), 0, 0, $S, $S)
+  $glowPath = Circle 512 572 422
+  $glow = New-Object Drawing.Drawing2D.PathGradientBrush $glowPath
+  $glow.CenterColor = C '#ffd56b' 120; $glow.SurroundColors = @((C '#ffd56b' 0))
+  $g.FillPath($glow, $glowPath)
+  $rnd = New-Object Random 11
+  $confetti = '#ffd56b', '#ffffff', '#3fbf7f', '#ff9ec7', '#7fd3ff'
+  for ($i = 0; $i -lt 46; $i++) {
+    $x = $rnd.Next($S); $y = $rnd.Next($S)
+    if ([Math]::Sqrt([Math]::Pow($x - 512, 2) + [Math]::Pow($y - 560, 2)) -lt 330) { continue }   # keep the character clear
+    $g.TranslateTransform($x, $y); $g.RotateTransform($rnd.Next(180))
+    $g.FillRectangle((Brush $confetti[$rnd.Next($confetti.Count)] 230), -11, -5, 22, 10)
+    $g.ResetTransform()
+  }
+  Sparkle 190 300 46 '#fff3c4'
+  Sparkle 850 520 38 '#fff3c4'
+  Sparkle 230 760 30 '#ffffff'
+  Sparkle 815 790 44 '#ffd56b'
+}
 
 # ---------- shared cute face: big sparkly eyes, rosy cheeks, open smile ----------
 function Face([double]$cx, [double]$cy, [double]$s = 1, [switch]$NoMouth) {
@@ -196,7 +207,26 @@ function Draw-Gift {
   Face 512 650 0.95
 }
 
+function Draw-Text {
+  # the two characters for "festival" (U+8282 U+65E5), centred and sized to sit well inside the safe circle
+  $word = [string][char]0x8282 + [string][char]0x65E5
+  $family = New-Object Drawing.FontFamily $Font
+  $path = New-Object Drawing.Drawing2D.GraphicsPath
+  $path.FillMode = 'Winding'   # overlapping strokes stay solid instead of cutting holes
+  $path.AddString($word, $family, [int][Drawing.FontStyle]::Regular, 400, (P 0 0), [Drawing.StringFormat]::GenericTypographic)
+  $b = $path.GetBounds()
+  $scale = [Math]::Min(600 / $b.Width, 330 / $b.Height)
+  $m = New-Object Drawing.Drawing2D.Matrix
+  $m.Translate([float](512 - ($b.X + $b.Width / 2) * $scale), [float](512 - ($b.Y + $b.Height / 2) * $scale))
+  $m.Scale([float]$scale, [float]$scale)
+  $path.Transform($m)
+  $g.TranslateTransform(0, 10); $g.FillPath((Brush '#c8a25a' 110), $path); $g.ResetTransform()   # soft gold shadow
+  $nb = $path.GetBounds()
+  $g.FillPath((Grad 0 $nb.Top 0 $nb.Bottom '#d4223f' '#9a1328'), $path)
+}
+
 switch ($Style) {
+  'text' { Draw-Text }
   'bauble' { Draw-Bauble }
   'reindeer' { Draw-Reindeer }
   'snowman' { Draw-Snowman }
