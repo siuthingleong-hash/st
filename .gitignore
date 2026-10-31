@@ -1,8 +1,0 @@
-# Safety net: this public site must never contain client data.
-*.csv
-*.pdf
-*.xlsx
-*.xls
-*.docx
-output/
-data/
