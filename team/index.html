@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>我的专属链接</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png?v=5">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700;800&family=Noto+Serif+SC:wght@700&display=swap">
+<style>
+  /* Layout: one phone-width working column on the app's cream ground: fill in the form, then copy the two links. */
+  :root {
+    color-scheme: light;
+    --cream: #f7ecd8; --card: #fffaf0; --line: #e3d3b4; --ink: #33201a; --muted: #6f5d50; --red: #a8152d; --red-deep: #7f0f22; --green: #1f8a4d; --bad: #a8152d;
+    --zh: "Noto Serif SC", "Songti SC", SimSun, serif;
+    --body: "Nunito Sans", "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--cream); color: var(--ink); font: 16px/1.55 var(--body);
+    padding: max(28px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(40px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+  main { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  h1 { margin: 0; font: 700 26px/1.25 var(--zh); color: var(--red); }
+  h2 { margin: 0; font: 700 18px/1.3 var(--zh); }
+  p { margin: 0; }
+  .sub { color: var(--muted); font-size: 14px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+  label { display: grid; gap: 4px; font-weight: 700; font-size: 15px; }
+  label small { font-weight: 400; color: var(--muted); }
+  input, select { font: 16px var(--body); color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; width: 100%; min-width: 0; }
+  input:focus-visible, select:focus-visible, .btn:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+  input[aria-invalid="true"] { border-color: var(--bad); }
+  .err { color: var(--bad); font-size: 14px; font-weight: 700; }
+  .btn { font: 800 15px/1 var(--body); border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 10px; padding: 12px 14px; cursor: pointer; text-decoration: none; text-align: center; display: inline-block; }
+  .btn.primary { background: var(--red); border-color: var(--red); color: #fff; width: 100%; padding: 15px; font-size: 16px; }
+  .btn.copy { background: var(--green); border-color: var(--green); color: #fff; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .link { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; background: var(--cream); border-radius: 8px; padding: 8px 10px; }
+  .msg { white-space: pre-wrap; overflow-wrap: anywhere; background: #dcf8c6; color: #111; border-radius: 12px 12px 12px 2px; padding: 12px; font-size: 14px; }
+  ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 15px; }
+  .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 10px; font-weight: 700; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.on { opacity: 1; }
+  a.back { color: var(--red); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>生成我的专属游戏链接</h1>
+  <p class="sub">写上你的名字和电话。客户玩完游戏，按一下按钮，结果就会用 WhatsApp 发给你。</p>
+
+  <form class="panel" id="form" novalidate>
+    <label for="name">你的名字
+      <input id="name" autocomplete="name" maxlength="40" placeholder="例如：Mei Ling">
+    </label>
+    <label for="phone">你的 WhatsApp 电话
+      <input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="例如：012-345 6789">
+    </label>
+    <label for="lang">客户看到的语言
+      <select id="lang"><option value="zh">中文</option><option value="ms">Bahasa Malaysia</option><option value="en">English</option></select>
+    </label>
+    <label for="client">客户名字 <small>（可不填。填了，游戏会写上客户的名字）</small>
+      <input id="client" maxlength="40" placeholder="不填就是给所有客户用">
+    </label>
+    <p class="err" id="err" role="alert" hidden></p>
+    <button class="btn primary" type="submit">生成链接</button>
+  </form>
+
+  <section id="out" hidden style="display:grid;grid-template-columns:minmax(0,1fr);gap:16px">
+    <div class="panel" id="xmas"></div>
+    <div class="panel" id="bday"></div>
+    <div class="panel">
+      <h2>记得先测试</h2>
+      <ol>
+        <li>按「试玩」，把游戏玩到最后。</li>
+        <li>按结果页的 WhatsApp 按钮，看收件人是不是你的电话。</li>
+        <li>没问题再发给客户。</li>
+      </ol>
+    </div>
+  </section>
+
+  <p class="sub">你的名字和电话不会上传，只放在链接里。拿到链接的人都看得到你的电话。这台手机会记住你填的名字和电话，下次不用重写。</p>
+  <a class="back" href="../">← 回到首页</a>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const KEY = 'greetings-team-advisor';
+  const BASE = new URL('../', location.href).href;
+
+  const WORDS = {
+    zh: {
+      hello: n => n ? n + '，' : '',
+      xmas: (n, link, me) => n + '圣诞快乐！🎄\n\n今年想送你一份不一样的圣诞祝福 😊 我准备了一个 1 分钟的小测验：测测你是哪一种「圣诞守护者」？\n👉 ' + link + '\n\n玩完按一下按钮，把结果 WhatsApp 回给我，看看我们是不是同一型 😉\n\n愿你和家人平安健康，新年顺顺利利！\n— ' + me,
+      bday: (n, link, me) => n + '生日快乐！🎂\n\n我准备了一个小惊喜给你，打开信封玩一玩，1 分钟就好 😊\n👉 ' + link + '\n\n愿新的一岁身体健康、事事顺心！\n— ' + me
+    },
+    ms: {
+      hello: n => n ? n + ', ' : '',
+      xmas: (n, link, me) => n + 'Selamat Hari Krismas! 🎄\n\nTahun ini saya nak hantar ucapan yang lain sikit 😊 Cuba kuiz 1 minit ini: anda penjaga Krismas jenis yang mana?\n👉 ' + link + '\n\nLepas main, tekan butang untuk WhatsApp keputusan kepada saya. Mari tengok kita sama jenis atau tidak 😉\n\nSemoga anda sekeluarga sihat dan selamat, tahun baru lebih baik!\n— ' + me,
+      bday: (n, link, me) => n + 'Selamat Hari Jadi! 🎂\n\nSaya ada satu kejutan kecil untuk anda. Buka sampul dan main sekejap, 1 minit saja 😊\n👉 ' + link + '\n\nSemoga sentiasa sihat dan bahagia!\n— ' + me
+    },
+    en: {
+      hello: n => n ? n + ', ' : '',
+      xmas: (n, link, me) => n + 'Merry Christmas! 🎄\n\nI wanted to send you something a bit different this year 😊 Try this 1-minute quiz: which Christmas guardian are you?\n👉 ' + link + "\n\nWhen you finish, tap the button to WhatsApp me your result. Let's see if we're the same type 😉\n\nWishing you and your family good health and a safe, happy new year!\n— " + me,
+      bday: (n, link, me) => n + 'Happy Birthday! 🎂\n\nI have a little surprise for you. Open the envelope and play for a minute 😊\n👉 ' + link + '\n\nWishing you good health and happiness in the year ahead!\n— ' + me
+    }
+  };
+
+  // Turns what people type into the digits wa.me needs. Returns '' when it cannot be a WhatsApp number, instead of guessing.
+  function normalisePhone(raw) {
+    const t = raw.trim(), d = t.replace(/\D/g, '');
+    if (t.startsWith('+') && !d.startsWith('60')) return /^[1-9]\d{7,14}$/.test(d) ? d : '';
+    const n = d.startsWith('60') ? d : d.startsWith('0') ? '6' + d : /^1\d{8,9}$/.test(d) ? '60' + d : '';
+    return /^601\d{8,9}$/.test(n) ? n : '';
+  }
+  function b64url(s) {
+    const bytes = new TextEncoder().encode(s);
+    return btoa(String.fromCharCode.apply(null, bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  function toast(m) { const t = $('toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 1800); }
+  function copy(text) {
+    const fallback = () => { const a = document.createElement('textarea'); a.value = text; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); toast('已复制 ✓'); } catch (e) { toast('请长按选取文字复制'); } a.remove(); };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast('已复制 ✓'), fallback); else fallback();
+  }
+
+  function fillCard(box, title, link, message) {
+    box.innerHTML = '';
+    const h = document.createElement('h2'); h.textContent = title;
+    const m = document.createElement('div'); m.className = 'msg'; m.textContent = message;
+    const u = document.createElement('div'); u.className = 'link'; u.textContent = link;
+    const row = document.createElement('div'); row.className = 'row';
+    const c1 = document.createElement('button'); c1.type = 'button'; c1.className = 'btn copy'; c1.textContent = '复制讯息'; c1.addEventListener('click', () => copy(message));
+    const c2 = document.createElement('button'); c2.type = 'button'; c2.className = 'btn'; c2.textContent = '只复制链接'; c2.addEventListener('click', () => copy(link));
+    const play = document.createElement('a'); play.className = 'btn'; play.href = link; play.target = '_blank'; play.rel = 'noopener'; play.textContent = '试玩';
+    row.append(c1, c2, play);
+    box.append(h, m, u, row);
+  }
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (saved) { $('name').value = saved.name || ''; $('phone').value = saved.phone || ''; }
+  } catch (e) {}
+
+  $('form').addEventListener('submit', e => {
+    e.preventDefault();
+    const me = $('name').value.trim().replace(/\|/g, ' '), phone = normalisePhone($('phone').value), client = $('client').value.trim(), lang = $('lang').value;
+    $('name').setAttribute('aria-invalid', String(!me));
+    $('phone').setAttribute('aria-invalid', String(!phone));
+    const err = !me ? '请写上你的名字。' : !phone ? '这个电话不像 WhatsApp 手机号码，请检查。例如：012-345 6789；外国号码请加 +。' : '';
+    $('err').textContent = err; $('err').hidden = !err;
+    if (err) { $('out').hidden = true; return; }
+    try { localStorage.setItem(KEY, JSON.stringify({ name: me, phone: $('phone').value.trim() })); } catch (e) {}
+
+    const tail = '#' + lang + (client ? '.' + b64url(client) : '') + '~' + b64url(me + '|' + phone);
+    const w = WORDS[lang], hello = w.hello(client);
+    const xmas = BASE + 'christmas/' + tail, bday = BASE + 'birthday/' + tail;
+    fillCard($('xmas'), '🎄 圣诞小测验', xmas, w.xmas(hello, xmas, me));
+    fillCard($('bday'), '🎂 生日惊喜', bday, w.bday(hello, bday, me));
+    $('out').hidden = false;
+    $('out').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+})();
+</script>
+</body>
+</html>
